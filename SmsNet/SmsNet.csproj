@@ -78,5 +78,11 @@
   <ItemGroup>
     <Folder Include="Data\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SmsNet.UI\SmsNet.UI.csproj">
+      <Project>{88f8428a-6f0a-476c-81df-6f86d0ea1ad3}</Project>
+      <Name>SmsNet.UI</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
