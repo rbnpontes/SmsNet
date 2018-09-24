@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SmsNet.UI
+namespace SmsNet.Core
 {
-    public class Class1
-    {
+    public sealed class Context
+    { 
     }
 }
