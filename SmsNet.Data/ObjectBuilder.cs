@@ -20,7 +20,6 @@ namespace SmsNet.Data
 			public string Name;
 			public PropertyInfo Property;
 			public MethodInfo MethodInfo;
-			public Delegate Setter;
 		}
 		private Type type;
 		private IList<PropertyHolder> properties = new List<PropertyHolder>();

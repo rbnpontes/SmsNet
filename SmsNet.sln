@@ -7,13 +7,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmsNet", "SmsNet\SmsNet.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmsNet.Core", "SmsNet.Core\SmsNet.Core.csproj", "{E96375FF-413B-4EF3-A1E8-938A0C693E6D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmsNet.Data", "SmsNet.Repository\SmsNet.Data.csproj", "{0701CB4E-B829-4FE8-9E49-8F409FF93F28}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmsNet.Entities", "SmsNet.Data\SmsNet.Entities.csproj", "{6294ED28-6153-421B-818E-B66672F63B5C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmsNet.UI", "SmsNet.UI\SmsNet.UI.csproj", "{88F8428A-6F0A-476C-81DF-6F86D0EA1AD3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmsNet.SimpleAppTest", "SmsNet.SimpleAppTest\SmsNet.SimpleAppTest.csproj", "{1B30BE7B-2518-44C2-8336-716B1507F1A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmsNet.Data", "SmsNet.Data\SmsNet.Data.csproj", "{0701CB4E-B829-4FE8-9E49-8F409FF93F28}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmsNet.Entities", "SmsNet.Entities\SmsNet.Entities.csproj", "{6294ED28-6153-421B-818E-B66672F63B5C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmsNet.Repository", "SmsNet.Repository\SmsNet.Repository.csproj", "{DD895959-41D6-419F-B362-D4A401582262}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,14 +31,6 @@ Global
 		{E96375FF-413B-4EF3-A1E8-938A0C693E6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E96375FF-413B-4EF3-A1E8-938A0C693E6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E96375FF-413B-4EF3-A1E8-938A0C693E6D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0701CB4E-B829-4FE8-9E49-8F409FF93F28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0701CB4E-B829-4FE8-9E49-8F409FF93F28}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0701CB4E-B829-4FE8-9E49-8F409FF93F28}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0701CB4E-B829-4FE8-9E49-8F409FF93F28}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6294ED28-6153-421B-818E-B66672F63B5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6294ED28-6153-421B-818E-B66672F63B5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6294ED28-6153-421B-818E-B66672F63B5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6294ED28-6153-421B-818E-B66672F63B5C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{88F8428A-6F0A-476C-81DF-6F86D0EA1AD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{88F8428A-6F0A-476C-81DF-6F86D0EA1AD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88F8428A-6F0A-476C-81DF-6F86D0EA1AD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -45,6 +39,18 @@ Global
 		{1B30BE7B-2518-44C2-8336-716B1507F1A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B30BE7B-2518-44C2-8336-716B1507F1A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B30BE7B-2518-44C2-8336-716B1507F1A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0701CB4E-B829-4FE8-9E49-8F409FF93F28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0701CB4E-B829-4FE8-9E49-8F409FF93F28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0701CB4E-B829-4FE8-9E49-8F409FF93F28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0701CB4E-B829-4FE8-9E49-8F409FF93F28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6294ED28-6153-421B-818E-B66672F63B5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6294ED28-6153-421B-818E-B66672F63B5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6294ED28-6153-421B-818E-B66672F63B5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6294ED28-6153-421B-818E-B66672F63B5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD895959-41D6-419F-B362-D4A401582262}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD895959-41D6-419F-B362-D4A401582262}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD895959-41D6-419F-B362-D4A401582262}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD895959-41D6-419F-B362-D4A401582262}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

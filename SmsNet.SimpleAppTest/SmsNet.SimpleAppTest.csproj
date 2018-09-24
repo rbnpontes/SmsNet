@@ -42,7 +42,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppDatabase.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -50,9 +49,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SmsNet.Repository\SmsNet.Data.csproj">
-      <Project>{0701cb4e-b829-4fe8-9e49-8f409ff93f28}</Project>
-      <Name>SmsNet.Data</Name>
+    <ProjectReference Include="..\SmsNet.Core\SmsNet.Core.csproj">
+      <Project>{e96375ff-413b-4ef3-a1e8-938a0c693e6d}</Project>
+      <Name>SmsNet.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

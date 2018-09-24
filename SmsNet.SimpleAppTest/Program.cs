@@ -1,4 +1,6 @@
-﻿using SmsNet.Repository.Data.Annotations;
+﻿using SmsNet.Core;
+using SmsNet.Core.Network;
+using SmsNet.Core.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,26 +9,23 @@ using System.Threading.Tasks;
 
 namespace SmsNet.SimpleAppTest
 {
-	class UserTest{
-		[Column("ID")]
-		public int Id { get; set; }
-		[Column("NAME")]
-		public string Name { get; set; }
-		[Column("USERNAME")]
-		public string Username { get; set; }
-	}
+	
 	class Program
 	{
+		static void TestEvent(object sender, object[] parameters)
+		{
+			Console.WriteLine("Hello World!!!");
+		}
 		static void Main(string[] args)
 		{
-			using(AppDatabase app = new AppDatabase())
-			{
-				app.Connect();
-				UserTest[] users = app.Fetch<UserTest>("SELECT * FROM USERS").Where(x => x.Id == 1).ToArray();
-				foreach (var user in users)
-					Console.WriteLine($"Id: {user.Id}, Name: {user.Name}, Username: {user.Username}");
-			}
+			Context.Singleton.RegisterFactory<ConfigManager>();
+			Context.Singleton.RegisterFactory<Request>();
+			Console.WriteLine(Context.Singleton.GetSubsystem<ConfigManager>().Load<DatabaseConfig>("Data/db.conf.json").ToJson());
+			Context.Singleton.AddListener("E_TEST", TestEvent).SendEvent("E_TEST");
+			Context.Singleton.GetSubsystem<Request>()
+				.Get("https://jsonplaceholder.typicode.com/todos/1").Success((url, data) => Console.WriteLine(data));
 			Console.ReadKey();
 		}
 	}
 }
+  
