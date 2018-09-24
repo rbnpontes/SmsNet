@@ -1,16 +1,20 @@
 ﻿using SmsNet.Data.Drivers.Annotations;
+using SmsNet.Data.Drivers;
 using SmsNet.Repository.Data.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SmsNet.Data.Drivers
+namespace SmsNet.Data
 {
 	internal sealed class ObjectBuilder
 	{
+		private delegate void SetterHandler(object target, object[] values);
 		private class PropertyHolder
 		{
 			public string Name;
@@ -20,6 +24,7 @@ namespace SmsNet.Data.Drivers
 		}
 		private Type type;
 		private IList<PropertyHolder> properties = new List<PropertyHolder>();
+		private Func<object> ConstructorMethod;
 		private ObjectBuilder()
 		{
 		}
@@ -35,8 +40,11 @@ namespace SmsNet.Data.Drivers
 		public ObjectBuilder Map(Type type)
 		{
 			this.type = type;
-
-			PropertyInfo[] props = type.GetProperties(BindingFlags.Public);
+			ConstructorInfo ctorInfo = type.GetConstructor(Type.EmptyTypes);
+			if (ctorInfo == null)
+				throw new UnauthorizedAccessException("Can't map a object without constructor");
+			ConstructorMethod = Expression.Lambda<Func<object>>(Expression.New(ctorInfo)).Compile();
+			PropertyInfo[] props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
 			foreach (PropertyInfo prop in props)
 			{
@@ -49,7 +57,7 @@ namespace SmsNet.Data.Drivers
 				ColumnAttribute columnName = prop.GetCustomAttribute<ColumnAttribute>();
 				if (columnName != null)
 					property.Name = columnName.Name;
-
+			
 				MethodInfo method = prop.GetSetMethod();
 				/// Cache Setter Method for fast reflection
 				/// Save method is used to bypass security check in reflection
@@ -61,18 +69,17 @@ namespace SmsNet.Data.Drivers
 		
 		public T Bind<T>(QueryResult[] results)
 		{
-			T target = default(T);
+			if (ConstructorMethod == null)
+				throw new Exception("No constructor method found, do you use Map first instead Bind ?");
+
+			T target = (T)ConstructorMethod();
 
 			foreach(QueryResult result in results)
 			{
 				PropertyHolder property = GetPropertyByColumn(result.Column);
 				if (property == null)
 					continue;
-				if(property.Setter == null)
-					property.Setter = (Action<T, object>)Delegate.CreateDelegate(typeof(Action<T, object>), null, property.MethodInfo);
-				
-				/// Invoke Setter Method
-				((Action<T, object>)property.Setter)(target, result.Value);
+				property.MethodInfo.Invoke(target, new object[1] { result.Value });
 			}
 
 			return target;
@@ -91,7 +98,7 @@ namespace SmsNet.Data.Drivers
 		{
 			if (!prop.CanWrite)
 				return false;
-			if (prop.GetCustomAttribute<NotMappingAttribute>() == null)
+			if (prop.GetCustomAttribute<NotMappingAttribute>() != null)
 				return false;
 			return true;
 		}

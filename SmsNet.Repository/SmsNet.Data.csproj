@@ -46,7 +46,7 @@
     <Compile Include="Drivers\Annotations\TableAttribute.cs" />
     <Compile Include="Drivers\IDatabaseDriver.cs" />
     <Compile Include="Drivers\MySqlDriver.cs" />
-    <Compile Include="Drivers\ObjectBuilder.cs" />
+    <Compile Include="ObjectBuilder.cs" />
     <Compile Include="Drivers\PostgreSqlDriver.cs" />
     <Compile Include="Drivers\QueryParameter.cs" />
     <Compile Include="Drivers\QueryResult.cs" />
