@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Animation\AnimateHandler.cs" />
     <Compile Include="Animation\Animator.cs" />
+    <Compile Include="Animation\AnimObject.cs" />
     <Compile Include="Animation\IAnimate.cs" />
     <Compile Include="Animation\IInterpolate.cs" />
     <Compile Include="Common\Hashing.cs" />

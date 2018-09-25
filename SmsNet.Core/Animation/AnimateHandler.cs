@@ -9,25 +9,12 @@ namespace SmsNet.Core.Animation
 {
 	internal sealed class AnimateHandler<TSource> : IAnimate<TSource>
 	{
-		public int Fps
-		{
-			get {
-				if (mCurrentAnim == null)
-					return 0;
-				return mCurrentAnim.Fps;
-			}
-			set{
-				if (mCurrentAnim == null)
-					return;
-				mCurrentAnim.Fps = value;
-			}
-		}
 		public int Duration
 		{
 			get
 			{
 				if (mCurrentAnim == null)
-					return 0;
+					throw new Exception("Can't get Duration value, do you call Begin() ?");
 				return mCurrentAnim.Duration;
 			}
 			set
@@ -41,14 +28,14 @@ namespace SmsNet.Core.Animation
 			get
 			{
 				if (mCurrentAnim == null)
-					return 0;
+					throw new Exception("Can't get Loop value, do you call Begin() ?");
 				return mCurrentAnim.Loop;
 			}
 			set
 			{
 				if (mCurrentAnim == null)
 					return;
-				mCurrentAnim.Loop = value;
+				SetLoop(value);
 			}
 		}
 		public int Delay
@@ -56,42 +43,37 @@ namespace SmsNet.Core.Animation
 			get
 			{
 				if (mCurrentAnim == null)
-					return 0;
+					throw new Exception("Can't get Delay value, do you call Begin() ?");
 				return mCurrentAnim.Delay;
 			}
 			set
 			{
 				if (mCurrentAnim == null)
 					return;
-				mCurrentAnim.Delay = value;
+				SetDelay(value);
 			}
 		}
-		public class Anim
-		{
-			public int Fps { get; set; }
-			public int Duration { get; set; }
-			public int Loop { get; set; }
-			public int Delay { get; set; }
-			public Delegate FromGetter { get; set; }
-			public Delegate FromSetter { get; set; }
-			public Delegate ToGetter { get; set; }
-			public Delegate ToSetter { get; set; }
+
+		private AnimObject mCurrentAnim;
+		private TSource mSource;
+		private IList<AnimObject> mAnimations = new List<AnimObject>();
+
+		public AnimateHandler(TSource src){
+			mSource = src;
 		}
-
-		private Anim mCurrentAnim;
-		private IList<Anim> mAnimations = new List<Anim>();
-
+		public IReadOnlyList<AnimObject> AnimationsHeap { get { return (IReadOnlyList<AnimObject>)mAnimations; } }
 		public IAnimate<TSource> Begin()
 		{
-			mCurrentAnim = new Anim();
+			mCurrentAnim = new AnimObject();
+			mCurrentAnim.Source = mSource;
 			return this;
 		}
-
 		public IAnimate<TSource> End()
 		{
 			if (mCurrentAnim == null)
 				throw new NullReferenceException("Cannot End Animate, do you call Begin() before End() ?");
 			mAnimations.Add(mCurrentAnim);
+			mCurrentAnim = null;
 			return this;
 		}
 		public IAnimate<TSource> From<TProperty>(System.Linq.Expressions.Expression<Func<TSource, TProperty>> expression)
@@ -111,25 +93,37 @@ namespace SmsNet.Core.Animation
 			}
 			return this;
 		}
+		public IAnimate<TSource> To<TProperty>(Func<TSource, TProperty> expression)
+		{
+			if (mCurrentAnim == null)
+				throw new NullReferenceException("Cannot set To, do you call Begin() before To() ?");
+
+			mCurrentAnim.To = expression ?? throw new ArgumentNullException("@expression cannot be null");
+			return this;
+		}
 		public IAnimate<TSource> SetDuration(int time)
 		{
-			throw new NotImplementedException();
-		}
-		public IAnimate<TSource> SetFps(int fps)
-		{
-			throw new NotImplementedException();
+			if (mCurrentAnim == null)
+				throw new NullReferenceException("Cannot set Duration, do you call Begin() before SetDuration() ?");
+
+			mCurrentAnim.Duration = time;
+			return this;
 		}
 		public IAnimate<TSource> SetLoop(int count)
 		{
-			throw new NotImplementedException();
+			if (mCurrentAnim == null)
+				throw new NullReferenceException("Cannot set Duration, do you call Begin() before SetLoop() ?");
+
+			mCurrentAnim.Loop = count;
+			return this;
 		}
 		public IAnimate<TSource> SetDelay(int delay)
 		{
-			throw new NotImplementedException();
-		}
-		public IAnimate<TSource> To<TProperty>(System.Linq.Expressions.Expression<Func<TSource, TProperty>> expression)
-		{
-			throw new NotImplementedException();
+			if (mCurrentAnim == null)
+				throw new NullReferenceException("Cannot set Duration, do you call Begin() before SetDelay() ?");
+
+			mCurrentAnim.Loop = delay;
+			return this;
 		}
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using SmsNet.Core;
+using SmsNet.Core.Animation;
 using SmsNet.Core.Network;
 using SmsNet.Core.Utils;
 using System;
@@ -21,24 +22,19 @@ namespace SmsNet.SimpleAppTest
 		{
 			Console.WriteLine("Hello World!!!");
 		}
-		static void TestExpression<TEntity,TProperty>(TEntity obj,Expression<Func<TEntity, TProperty>> expression)
-		{
-			Console.WriteLine(expression.GetGetterMethod().Invoke(obj));
-			Delegate @delegate = expression.GetSetterMethod();
-			@delegate.DynamicInvoke(new object[] { obj, 20 });
-		}
 		static void Main(string[] args)
 		{
-			Foo foo = new Foo();
-			foo.X = 10;
-			TestExpression(foo, x => x.X);
-			Console.WriteLine(foo.X);
 			Context.Singleton.RegisterFactory<ConfigManager>();
 			Context.Singleton.RegisterFactory<Request>();
+			Context.Singleton.RegisterFactory<Animator>();
+
 			Console.WriteLine(Context.Singleton.GetSubsystem<ConfigManager>().Load<DatabaseConfig>("Data/db.conf.json").ToJson());
 			Context.Singleton.AddListener("E_TEST", TestEvent).SendEvent("E_TEST");
 			Context.Singleton.GetSubsystem<Request>()
 				.Get("https://jsonplaceholder.typicode.com/todos/1").Success((url, data) => Console.WriteLine(data));
+			IAnimate<Foo> anim = Context.Singleton.GetSubsystem<Animator>().Bind(new Foo());
+			anim.Begin().SetDuration(1000).From(x => x.X).To(x => 100).End();
+			Context.Singleton.GetSubsystem<Animator>().Play(anim);
 			Console.ReadKey();
 		}
 	}
