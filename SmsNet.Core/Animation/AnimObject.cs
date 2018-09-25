@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,5 +16,6 @@ namespace SmsNet.Core.Animation
 		public Delegate FromGetter { get; set; }
 		public Delegate FromSetter { get; set; }
 		public Delegate To { get; set; }
+		public Stopwatch Watch { get; set; }
 	}
 }

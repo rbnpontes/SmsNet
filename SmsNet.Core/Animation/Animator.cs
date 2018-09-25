@@ -32,9 +32,54 @@ namespace SmsNet.Core.Animation
 		}
 		private void HandleAnimation(object state)
 		{
-			IReadOnlyList<AnimObject> animations = (IReadOnlyList<AnimObject>)state;
-			Stopwatch watch = new Stopwatch();
-			watch.Start();
+			List<AnimObject> animations = (List<AnimObject>)state;
+			while (animations.Count > 0)
+			{
+				for(int i=0;i<animations.Count;i++)
+				{
+					AnimObject item = animations[i];
+					if(item.Watch == null)
+					{
+						item.Watch = new Stopwatch();
+						item.Watch.Start();
+					}
+					float alpha = (float)item.Watch.ElapsedMilliseconds / (float)item.Duration;
+					if (alpha > 1.0f)
+						alpha = 1.0f;
+					TryMakeInterpolation(item, alpha);
+					if(alpha >= 1.0f && item.Loop != -1)
+					{
+						if(item.Loop == 0)
+						{
+							animations.RemoveAt(i);
+							continue;
+						}
+						item.Loop--;
+						item.Watch.Restart();
+						item.Watch.Start();
+					}
+				}
+			}
+		}
+		private void TryMakeInterpolation(AnimObject anim, float alpha)
+		{
+			object rawFromValue = anim.FromGetter.DynamicInvoke(anim.Source);
+			object rawToValue = anim.FromGetter.DynamicInvoke(anim.Source);
+
+			if(rawFromValue is Int32 || rawFromValue is Int16 || rawFromValue is Int64)
+			{
+				long value = IntegerInterpolation((long)rawFromValue, (long)rawToValue, alpha);
+			}
+		}
+		private long IntegerInterpolation(long from, long to, float alpha)
+		{
+			long diff = to - from;
+			return (long)Math.Floor(diff * alpha);
+		}
+		private double FloatInterpolation(double from, double to, float alpha)
+		{
+			double diff = to - from;
+			return diff * alpha;
 		}
 	}
 }

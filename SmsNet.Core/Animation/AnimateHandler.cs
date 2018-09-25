@@ -82,6 +82,18 @@ namespace SmsNet.Core.Animation
 				throw new ArgumentNullException("@expression cannot be null");
 			if (mCurrentAnim == null)
 				throw new NullReferenceException("Cannot set From, do you call Begin() before From() ?");
+
+			Type propType = typeof(TProperty);
+			if (!(propType.IsAssignableFrom(typeof(int))
+				|| propType.IsAssignableFrom(typeof(float))
+				|| propType.IsAssignableFrom(typeof(double))
+				|| propType.IsAssignableFrom(typeof(short))
+				|| propType.IsAssignableFrom(typeof(long))))
+			{
+				if(!propType.IsAssignableFrom(typeof(IInterpolator)))
+					throw new InvalidOperationException("Invalid type Property");
+			}
+
 			try
 			{
 				mCurrentAnim.FromGetter = expression.GetGetterMethod();
