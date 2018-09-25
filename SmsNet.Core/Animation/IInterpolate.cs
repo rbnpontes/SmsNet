@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace SmsNet.Core.Animation
 {
-	interface IInterpolate
+	public interface IInterpolate<TSource>
 	{
+		void OnInterpolate(TSource from, TSource to, float alpha);
 	}
 }

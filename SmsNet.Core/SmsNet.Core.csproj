@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Animation\AnimateHandler.cs" />
     <Compile Include="Animation\Animator.cs" />
     <Compile Include="Animation\IAnimate.cs" />
     <Compile Include="Animation\IInterpolate.cs" />

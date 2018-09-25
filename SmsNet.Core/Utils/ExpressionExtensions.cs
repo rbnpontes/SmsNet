@@ -10,11 +10,7 @@ namespace SmsNet.Core.Utils
 {
 	public static class ExpressionExtensions
 	{
-		public static Func<TEntity,TProperty> GetGetterMethod<TEntity,TProperty>(this Expression<Func<TEntity, TProperty>> expression)
-		{
-			return expression.Compile();
-		} 
-		public static Action<TEntity,TProperty> GetSetterMethod<TEntity,TProperty>(this Expression<Func<TEntity,TProperty>> expression)
+		public static PropertyInfo GetPropertyInfo<TEntity,TProperty>(this Expression<Func<TEntity, TProperty>> expression)
 		{
 			MemberExpression exp = null;
 
@@ -30,13 +26,20 @@ namespace SmsNet.Core.Utils
 				exp = (MemberExpression)expression.Body;
 			else
 				throw new ArgumentException();
-			
+
 			if (exp.Member is FieldInfo)
 				throw new ArgumentException("Invalid Expression, the param need to be a property instead a field");
 
-			PropertyInfo property = exp.Member as PropertyInfo;
-
-			return (Action<TEntity,TProperty>)property.SetMethod.CreateDelegate(typeof(Action<TEntity,TProperty>));
+			return exp.Member as PropertyInfo;
+		}
+		public static Func<TEntity,TProperty> GetGetterMethod<TEntity,TProperty>(this Expression<Func<TEntity, TProperty>> expression)
+		{
+			return expression.Compile();
+		} 
+		public static Action<TEntity,TProperty> GetSetterMethod<TEntity,TProperty>(this Expression<Func<TEntity,TProperty>> expression)
+		{
+			MethodInfo method = GetPropertyInfo(expression).SetMethod;
+			return (Action<TEntity,TProperty>)method.CreateDelegate(typeof(Action<TEntity,TProperty>));
 		}
 	}
 }

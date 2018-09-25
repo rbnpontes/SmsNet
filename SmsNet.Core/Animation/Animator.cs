@@ -11,6 +11,13 @@ namespace SmsNet.Core.Animation
 		public void OnCreateFactory()
 		{
 		}
-
+		public IAnimate<T> Bind<T>(T obj)
+		{
+			return null;
+		}
+		public Animator Play<T>(IAnimate<T> anim)
+		{
+			return this;
+		}
 	}
 }
