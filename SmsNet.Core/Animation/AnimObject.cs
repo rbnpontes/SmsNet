@@ -9,13 +9,16 @@ namespace SmsNet.Core.Animation
 {
 	internal sealed class AnimObject
 	{
-		public object Source { get; set; }
-		public int Duration { get; set; }
-		public int Loop { get; set; }
-		public int Delay { get; set; }
-		public Delegate FromGetter { get; set; }
-		public Delegate FromSetter { get; set; }
-		public Delegate To { get; set; }
-		public Stopwatch Watch { get; set; }
+		public object Source { get;internal set; }
+		public int Duration { get; internal set; }
+		public int Loop { get; internal set; }
+		public int Delay { get; internal set; }
+		public object InitialValue { get; internal set; }
+		public IEasing EasingMethod { get; internal set; }
+		public Delegate Listener { get; internal set; }
+		public Delegate FromGetter { get; internal set; }
+		public Delegate FromSetter { get; internal set; }
+		public Delegate To { get; internal set; }
+		public Stopwatch Watch { get; internal set; }
 	}
 }

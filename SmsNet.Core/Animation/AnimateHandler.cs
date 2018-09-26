@@ -66,6 +66,7 @@ namespace SmsNet.Core.Animation
 		{
 			mCurrentAnim = new AnimObject();
 			mCurrentAnim.Source = mSource;
+			mCurrentAnim.EasingMethod = new LinearEasing();
 			return this;
 		}
 		public IAnimate<TSource> End()
@@ -98,6 +99,7 @@ namespace SmsNet.Core.Animation
 			{
 				mCurrentAnim.FromGetter = expression.GetGetterMethod();
 				mCurrentAnim.FromSetter = expression.GetSetterMethod();
+				mCurrentAnim.InitialValue = mCurrentAnim.FromGetter.DynamicInvoke(mCurrentAnim.Source);
 			}
 			catch (Exception e)
 			{
@@ -135,6 +137,21 @@ namespace SmsNet.Core.Animation
 				throw new NullReferenceException("Cannot set Duration, do you call Begin() before SetDelay() ?");
 
 			mCurrentAnim.Loop = delay;
+			return this;
+		}
+		public IAnimate<TSource> SetOnAnimateListener(Action<TSource, AnimVariant, AnimVariant, float> listener)
+		{
+			if (mCurrentAnim == null)
+				throw new NullReferenceException("Cannot set Duration, do you call Begin() before SetDelay() ?");
+
+			mCurrentAnim.Listener = listener ?? throw new ArgumentNullException("listener param can't be null");
+			return this;
+		}
+		public IAnimate<TSource> SetEasingType(IEasing easing)
+		{
+			if (mCurrentAnim == null)
+				throw new NullReferenceException("Cannot set Duration, do you call Begin() before SetDelay() ?");
+			mCurrentAnim.EasingMethod = easing ?? throw new ArgumentNullException("easing param can't be null");
 			return this;
 		}
 	}

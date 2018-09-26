@@ -43,7 +43,7 @@ namespace SmsNet.Core.Animation
 						item.Watch = new Stopwatch();
 						item.Watch.Start();
 					}
-					float alpha = (float)item.Watch.ElapsedMilliseconds / (float)item.Duration;
+					float alpha = item.Watch.ElapsedMilliseconds / (float)item.Duration;
 					if (alpha > 1.0f)
 						alpha = 1.0f;
 					TryMakeInterpolation(item, alpha);
@@ -63,23 +63,47 @@ namespace SmsNet.Core.Animation
 		}
 		private void TryMakeInterpolation(AnimObject anim, float alpha)
 		{
-			object rawFromValue = anim.FromGetter.DynamicInvoke(anim.Source);
-			object rawToValue = anim.FromGetter.DynamicInvoke(anim.Source);
+			alpha = anim.EasingMethod.Evaluate(alpha);
+			AnimVariant rawFromValue = new AnimVariant(anim.InitialValue);
+			AnimVariant rawToValue = new AnimVariant(anim.To.DynamicInvoke(anim.Source));
 
-			if(rawFromValue is Int32 || rawFromValue is Int16 || rawFromValue is Int64)
+			object value = null;
+			switch (rawFromValue.VariantType)
 			{
-				long value = IntegerInterpolation((long)rawFromValue, (long)rawToValue, alpha);
+				case AnimVariantType.Int:
+					value = Interpolate(rawFromValue.GetInt(), rawToValue.GetInt(), alpha);
+					break;
+				case AnimVariantType.Short:
+					value = Interpolate(rawFromValue.GetShort(), rawToValue.GetShort(), alpha);
+					break;
+				case AnimVariantType.Long:
+					value = Interpolate(rawFromValue.GetLong(), rawToValue.GetLong(), alpha);
+					break;
+				case AnimVariantType.Float:
+					value = Interpolate(rawFromValue.GetFloat(), rawToValue.GetFloat(), alpha);
+					break;
+				case AnimVariantType.Double:
+					value = Interpolate(rawFromValue.GetDouble(), rawToValue.GetDouble(), alpha);
+					break;
+				case AnimVariantType.Interpolator:
+					{
+						IInterpolator interpolator = rawFromValue.GetInterpolator();
+						interpolator.OnInterpolate(rawFromValue.Source,rawToValue.Source,alpha);
+						value = interpolator;
+					}
+					break;
+				default:
+					throw new InvalidOperationException("Cannot Interpolate a Unknow Type value");
 			}
+			anim.Listener?.DynamicInvoke(anim.Source, rawFromValue, rawToValue, alpha);
+			anim.FromSetter.DynamicInvoke(anim.Source, value);
 		}
-		private long IntegerInterpolation(long from, long to, float alpha)
+		private T Interpolate<T>(T from, T to, float alpha)
 		{
-			long diff = to - from;
-			return (long)Math.Floor(diff * alpha);
-		}
-		private double FloatInterpolation(double from, double to, float alpha)
-		{
-			double diff = to - from;
-			return diff * alpha;
+			dynamic first = from;
+			dynamic second = to;
+
+			return (T)((second - first) * alpha);
 		}
 	}
 }

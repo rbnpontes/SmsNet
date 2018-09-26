@@ -47,7 +47,9 @@
     <Compile Include="Animation\Animator.cs" />
     <Compile Include="Animation\AnimObject.cs" />
     <Compile Include="Animation\AnimVariant.cs" />
+    <Compile Include="Animation\Easing.cs" />
     <Compile Include="Animation\IAnimate.cs" />
+    <Compile Include="Animation\IEasing.cs" />
     <Compile Include="Animation\IInterpolator.cs" />
     <Compile Include="Common\Hashing.cs" />
     <Compile Include="Container\HashMap.cs" />
